@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 def value_dummy(S, const=1, **kwargs):
     return const
 

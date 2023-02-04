@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from tools import extract_from_circuit
 from ushap import ShapleyValues
 

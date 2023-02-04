@@ -1,12 +1,8 @@
-# -*- coding: utf-8 -*-
-
 from itertools import product
-
 import numpy as np
 from qiskit.opflow import AbelianGrouper
 from qiskit.quantum_info import Statevector
 from scipy.stats import entropy
-
 from tools import build_circuit, evaluate_circuit, evaluate_circuits
 from values import value_fun_batch_wrapper_base
 

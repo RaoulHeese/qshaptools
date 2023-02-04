@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
-
 import numpy as np
 from tqdm import tqdm
-
 from tools import powerset
 from ushap import delta_phi_calculation, w_calculation, d_calculation
 
