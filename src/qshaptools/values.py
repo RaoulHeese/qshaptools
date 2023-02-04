@@ -10,4 +10,3 @@ def value_fun_batch_wrapper_base(S_list, wrapped_value_fun, **kwargs):
     for S in S_list:
         value_list.append(wrapped_value_fun(S, **kwargs))
     return value_list
-    

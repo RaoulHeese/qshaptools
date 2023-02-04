@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from ushap import ShapleyValues
 from tools import extract_from_circuit
+from ushap import ShapleyValues
 
 
 class QuantumShapleyValues(ShapleyValues):
-    def __init__(self, qc, value_fun, value_kwargs_dict, quantum_instance, shap_sample_frac=None, shap_sample_reps=1, evaluate_value_only_once=False, shap_sample_seed=None, shap_batch_size=None, qc_preprocessing_fun=None, locked_instructions=None, memory=None, callback=None, delta_exponent=1, name=None, silent=False):
-        '''
+    def __init__(self, qc, value_fun, value_kwargs_dict, quantum_instance, shap_sample_frac=None, shap_sample_reps=1,
+                 evaluate_value_only_once=False, shap_sample_seed=None, shap_batch_size=None, qc_preprocessing_fun=None,
+                 locked_instructions=None, memory=None, callback=None, delta_exponent=1, name=None, silent=False):
+        """
         Parameters
         ----------
         qc : qiskit.circuit.QuantumCircuit
@@ -44,26 +46,30 @@ class QuantumShapleyValues(ShapleyValues):
         name : str, optional (default: None)
             Only for displaying purposes. Defaults to a standard name for None.
         silent : bool, optional (default: False)
-            If True, hide progess bars.           
-        '''
-        
+            If True, hide progess bars.
+        """
+
         # preprocess
         self._qc_preprocessing_fun = qc_preprocessing_fun
         if self._qc_preprocessing_fun is not None:
             qc = self._qc_preprocessing_fun(qc)
         self._num_qubits, self._qc_data = extract_from_circuit(qc, locked_instructions)
-        unlocked_instructions = [idx for idx, (instr, qargs, cargs, opts) in enumerate(self._qc_data) if not opts['lock']]
-            
+        unlocked_instructions = [idx for idx, (instr, qargs, cargs, opts) in enumerate(self._qc_data) if
+                                 not opts['lock']]
+
         # setup value function kwargs
         self._quantum_instance = quantum_instance
-        effective_value_kwargs_dict = {'qc_data': self._qc_data, 'num_qubits': self._num_qubits, 'quantum_instance': self._quantum_instance}
+        effective_value_kwargs_dict = {'qc_data': self._qc_data, 'num_qubits': self._num_qubits,
+                                       'quantum_instance': self._quantum_instance}
         effective_value_kwargs_dict.update(value_kwargs_dict)
-         
+
         # initialize
-        super().__init__(unlocked_instructions, locked_instructions, value_fun, effective_value_kwargs_dict, shap_sample_frac, shap_sample_reps, shap_batch_size, evaluate_value_only_once, shap_sample_seed, memory, callback, delta_exponent, name, silent)
-        
+        super().__init__(unlocked_instructions, locked_instructions, value_fun, effective_value_kwargs_dict,
+                         shap_sample_frac, shap_sample_reps, shap_batch_size, evaluate_value_only_once,
+                         shap_sample_seed, memory, callback, delta_exponent, name, silent)
+
     def run(self):
-        '''
+        """
         Evaluate Shapley values.
 
         Returns
@@ -72,13 +78,13 @@ class QuantumShapleyValues(ShapleyValues):
             Dictionary of Shapley values of the form {player index: value, ...}.
             Result is also stored in phi_dict property.
 
-        '''
+        """
         return self()
-    
+
     def get_values(self, S_list, recall=False):
-        '''
+        """
         Evaluate value functions.
-        
+
         Parameters
         ----------
         S_list : list
@@ -91,24 +97,24 @@ class QuantumShapleyValues(ShapleyValues):
         values : list
             List of values, one float for every coalition.
 
-        '''
+        """
         return self.eval_S_list(S_list, recall)
 
     def disp(self):
-        '''
+        """
         Print settings.
 
         Returns
         -------
         None.
 
-        '''
+        """
         print(self.__str__())
-        
-    def get_summary_dict(self, property_list=[]):
-        '''
+
+    def get_summary_dict(self, property_list=None):
+        """
         Return a summary of the most important properties in form of a dictionary.
-        
+
         Parameters
         ----------
         property_list : list, optional (default: [])
@@ -118,15 +124,19 @@ class QuantumShapleyValues(ShapleyValues):
         -------
         summary : dict
             Dictionary containing selected properties.
-            
-        '''
-        def get_attr(name):
-            return getattr(self, name) if hasattr(self, name) else None
+
+        """
+
+        if property_list is None:
+            property_list = []
+
+        def get_attr(name_):
+            return getattr(self, name_) if hasattr(self, name_) else None
+
         summary = super().get_summary_dict(property_list)
         summary.update({'quantum_instance': get_attr('_quantum_instance'),
-                        #'qc': get_attr('_qc'),
+                        # 'qc': get_attr('_qc'),
                         'qc_preprocessing_fun': get_attr('_qc_preprocessing_fun'),
-                        #'qc_data': get_attr('_qc_data'),
+                        # 'qc_data': get_attr('_qc_data'),
                         'num_qubits': get_attr('_num_qubits')})
-        return summary  
-    
+        return summary
