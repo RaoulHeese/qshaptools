@@ -5,13 +5,16 @@ Quantum Shapley Value Toolbox
 .. image:: https://img.shields.io/badge/license-MIT-lightgrey
     :target: https://github.com/RaoulHeese/qtree/blob/main/LICENSE
     :alt: MIT License
-
-Experimental Python toolbox for Shapley values with uncertain value functions in general (see `Shapley Values with Uncertain Value Functions: arxiv.2301.08086 <https://doi.org/10.48550/arxiv.2301.08086>`_) and quantum Shapley values in particular (see `Explainable Quantum Machine Learning: arxiv.2301.09138 <https://doi.org/10.48550/arxiv.2301.09138>`_). For quantum Shapley values, the toolbox presumes a representation of quantum circuits via Qiskit.
-
+	
 .. image:: https://github.com/RaoulHeese/qshaptools/blob/master/_static/qshap.png?raw=true
     :alt: Title
 
+Experimental Python toolbox for Shapley values with uncertain value functions in general (see `Shapley Values with Uncertain Value Functions: arxiv.2301.08086 <https://doi.org/10.48550/arxiv.2301.08086>`_) and quantum Shapley values in particular (see `Explainable Quantum Machine Learning: arxiv.2301.09138 <https://doi.org/10.48550/arxiv.2301.09138>`_).
+
+
 **Usage**
+
+For quantum Shapley values, the toolbox presumes a representation of quantum circuits via Qiskit.
 
 Minimal working example:
 
@@ -44,7 +47,9 @@ Minimal working example:
 	# show results
 	print(qsv.phi_dict)
 	visualize_shapleys(qc, phi_dict=qsv.phi_dict).draw()
-	
+
+As a result, the quantum Shapley values assigned to each gate are plotted:
+
 .. image:: https://github.com/RaoulHeese/qshaptools/blob/master/_static/output.png?raw=true
     :alt: Output
 
