@@ -9,7 +9,7 @@ Quantum Shapley Value Toolbox
 .. image:: https://github.com/RaoulHeese/qshaptools/blob/master/_static/qshap.png?raw=true
     :alt: Title
 
-Experimental Python toolbox for Shapley values with uncertain value functions in general (see `Shapley Values with Uncertain Value Functions: arxiv.2301.08086 <https://doi.org/10.48550/arxiv.2301.08086>`_) and quantum Shapley values in particular (see `Explainable Quantum Machine Learning: arxiv.2301.09138 <https://doi.org/10.48550/arxiv.2301.09138>`_).
+Experimental Python toolbox for Shapley values with uncertain value functions in general (see `Shapley Values with Uncertain Value Functions: arxiv.2301.08086 <https://doi.org/10.48550/arxiv.2301.08086>`_) and quantum Shapley values in particular (see `Explainable Quantum Machine Learning: arxiv.2301.09138 <https://doi.org/10.48550/arxiv.2301.09138>`_). Quantum Shapley values provide a method to measure the influence of gates within quantum circuit with respect to a freely customizable value function, for example expressibility or entanglement capability.
 
 
 **Usage**
