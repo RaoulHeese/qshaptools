@@ -51,7 +51,7 @@ Minimal working example:
 As a result, the quantum Shapley values assigned to each gate are plotted:
 
 .. image:: https://github.com/RaoulHeese/qshaptools/blob/master/_static/output.png?raw=true
-	:alt: Output
+    :alt: Output
 
 
 📖 **Citation**
