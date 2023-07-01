@@ -98,8 +98,8 @@ class ShapleyValues():
             return self._value_fun(S_list=S, **self._value_kwargs_dict)
 
     def _sample_S_list(self, Fi, total):
-        def calculate_num_samples(sample_frac, P_length):
-            return int(np.ceil(sample_frac * P_length))
+        def calculate_num_samples(sample_frac, sample_size):
+            return int(np.ceil(sample_frac * sample_size))
 
         if self._sample_in_memory:
             P, P_length = powerset(Fi)
