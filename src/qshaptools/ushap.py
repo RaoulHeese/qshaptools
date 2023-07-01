@@ -1,7 +1,7 @@
 import numpy as np
 from tqdm import tqdm
 
-from tools import p_coalition, powerset
+from tools import p_coalition, powerset_length, powerset, sample_binary
 
 
 def w_calculation(S, F):
@@ -25,7 +25,8 @@ def delta_phi_calculation(S, F, v, vi, use_weight=True, delta_exponent=1):
 
 class ShapleyValues():
     def __init__(self, unlocked_instructions, locked_instructions, value_fun, value_kwargs_dict, shap_sample_frac,
-                 shap_sample_reps, shap_batch_size, evaluate_value_only_once, shap_sample_seed, memory, callback,
+                 shap_sample_reps, shap_batch_size, evaluate_value_only_once, sample_in_memory, shap_sample_seed,
+                 memory, callback,
                  delta_exponent, name, silent):
         # setup instructions
         if locked_instructions is None:
@@ -62,6 +63,7 @@ class ShapleyValues():
         self._name = name
 
         # setup other properties
+        self._sample_in_memory = sample_in_memory
         self._shap_sample_seed = shap_sample_seed
         self._value_fun = value_fun
         self._value_kwargs_dict = value_kwargs_dict
@@ -95,6 +97,25 @@ class ShapleyValues():
         else:
             return self._value_fun(S_list=S, **self._value_kwargs_dict)
 
+    def _sample_S_list(self, Fi, total):
+        def calculate_num_samples(sample_frac, P_length):
+            return int(np.ceil(sample_frac * P_length))
+
+        if self._sample_in_memory:
+            P, P_length = powerset(Fi)
+            num_samples = calculate_num_samples(self._shap_sample_frac, P_length)
+            i_array = np.arange(P_length)
+            P_array = [S for S in P]
+            p_array = [p_coalition(len(S), total) for S in P_array]
+            i_samples = self.rng_.choice(i_array, size=num_samples, replace=True, p=p_array)
+            S_list = [P_array[i] for i in i_samples]
+        else:
+            P_length = powerset_length(len(Fi))
+            num_samples = calculate_num_samples(self._shap_sample_frac, P_length)
+            S_list = [[Fi[i] for i, b_ in enumerate(sample_binary(self.rng_, total - 1)) if b_ == 1] for _ in
+                      range(num_samples)]
+        return num_samples, S_list
+
     def _build_S_gen(self):
         F = self._unlocked_instructions
         if self._shap_sample_frac is not None:
@@ -107,13 +128,7 @@ class ShapleyValues():
                 for idx in F:
                     Fi = F.copy()
                     Fi.pop(F.index(idx))
-                    P, P_length = powerset(Fi)
-                    num_samples = int(np.ceil(self._shap_sample_frac * P_length))
-                    i_array = np.arange(P_length)
-                    P_array = [S for S in P]
-                    p_array = [p_coalition(len(S), len(F)) for S in P_array]
-                    i_samples = self.rng_.choice(i_array, size=num_samples, replace=True, p=p_array)
-                    S_list = [P_array[i] for i in i_samples]
+                    num_samples, S_list = self._sample_S_list(Fi, total)
                     self.S_gen_[idx] = S_list
                     self.S_gen_length_ += num_samples
                     self.num_samples_dict_[idx] = num_samples
@@ -147,9 +162,12 @@ class ShapleyValues():
 
     def _eval_Si_total_list(self):
         L = self._locked_instructions
-        if self._evaluate_value_only_once:
-            Si_effective_total_list = list(
-                list(x) for x in set(tuple(x) for x in self.Si_total_list_))  # remove duplicates
+        if self._evaluate_value_only_once:  # remove duplicates
+            Si_xk_dict = {}
+            for k, x in self.Si_total_list_:
+                if tuple(x) not in Si_xk_dict:
+                    Si_xk_dict[tuple(x)] = k
+            Si_effective_total_list = [[k, list(x)] for x, k in Si_xk_dict.items()]
         else:
             Si_effective_total_list = self.Si_total_list_
         if self._shap_batch_size is not None:
@@ -182,7 +200,7 @@ class ShapleyValues():
                     self._memory[key].append([i, value])
                     prog.update(1)
 
-    def _eval_shap_idx(self, idx, prog):
+    def _eval_shap_idx(self, idx, prog=None):
         F = self._unlocked_instructions
         if self._shap_sample_frac is not None:
             P = self.S_gen_[idx]
@@ -202,7 +220,8 @@ class ShapleyValues():
             vi = np.mean([x[1] for x in self._memory[key_Si]])
             delta_phi = delta_phi_calculation(S, F, v, vi, use_weight=use_weight, delta_exponent=self._delta_exponent)
             phi += delta_phi
-            prog.update(1)
+            if prog is not None:
+                prog.update(1)
         if self._shap_sample_frac is not None:
             phi /= len(P)
         return phi

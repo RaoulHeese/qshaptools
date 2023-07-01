@@ -1,5 +1,5 @@
 import math
-from itertools import chain, combinations
+from itertools import chain, combinations, product
 
 import numpy as np
 from qiskit.circuit import ParameterVector, QuantumCircuit
@@ -10,11 +10,63 @@ def p_coalition(coalition_len, total_len):
     return p
 
 
+def powerset_length(len_iterable):
+    return 2 ** len_iterable
+
+
 def powerset(iterable):
     s = list(iterable)
-    P_length = 2 ** (len(s))
+    P_length = powerset_length(len(s))
     P = chain.from_iterable(combinations(s, r) for r in range(len(s) + 1))
     return P, P_length
+
+
+def get_branch_proba(condition):
+    def p_coalition_bin(b, total_len):
+        coalition_len = sum(b)
+        p = math.factorial(coalition_len) * math.factorial(total_len - coalition_len - 1) / math.factorial(total_len)
+        return p
+
+    def powerset_bin_cond(N, condition={}):
+        if N - len(condition) < 0:
+            return (list(condition.values()),)
+        P = product([0, 1], repeat=N - len(condition))
+        idx_map = {i: i if i not in condition else condition[i] for i in range(N)}
+
+        def m(x):
+            x_ = [0 for _ in range(N)]
+            n_ = 0
+            for n in range(N):
+                if n not in condition:
+                    x_[n] = x[idx_map[n_]]
+                    n_ += 1
+                else:
+                    x_[n] = condition[n]
+            return x_
+
+        return (m(x) for x in P)
+
+    N = len(condition) + 1
+    return sum([p_coalition_bin(b, N) for b in powerset_bin_cond(N - 1, condition)])
+
+
+def sample_binary(rng, N):
+    b = []
+    for _ in range(N):
+        p = rng.rand()
+        c0 = {i: v for i, v in enumerate(b)}
+        c0[len(b)] = 0
+        c1 = {i: v for i, v in enumerate(b)}
+        c1[len(b)] = 1
+        p0 = get_branch_proba(c0)
+        p1 = get_branch_proba(c1)
+        p0 /= p0 + p1
+        if p <= p0:
+            bp = 0
+        else:
+            bp = 1
+        b.append(bp)
+    return b
 
 
 def build_circuit(qc_data, num_qubits, S=None, cl_bits=True):

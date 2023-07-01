@@ -4,7 +4,8 @@ from ushap import ShapleyValues
 
 class QuantumShapleyValues(ShapleyValues):
     def __init__(self, qc, value_fun, value_kwargs_dict, quantum_instance, shap_sample_frac=None, shap_sample_reps=1,
-                 evaluate_value_only_once=False, shap_sample_seed=None, shap_batch_size=None, qc_preprocessing_fun=None,
+                 evaluate_value_only_once=False, sample_in_memory=True, shap_sample_seed=None, shap_batch_size=None,
+                 qc_preprocessing_fun=None,
                  locked_instructions=None, memory=None, callback=None, delta_exponent=1, name=None, silent=False):
         """
         Parameters
@@ -25,7 +26,9 @@ class QuantumShapleyValues(ShapleyValues):
         shap_sample_reps : int or none (default: 1)
             Number of repeated evaluations for each value function. For each considered coalition, 2*shap_sample_reps value functions are calculated. The mean of all value functions for the same coalition is used to determine the Shapley values.
         evaluate_value_only_once : bool (default: False)
-            If true, evaluate every value function only once and recall from memory afterwards. Otherwise, allows to evaluate each value function multiple times. Is required to be false for shap_sample_reps>1 to have any effect.
+            If true, evaluate every value function only once and recall from memory afterward. Otherwise, allows to evaluate each value function multiple times. Is required to be false for shap_sample_reps>1 to have any effect.
+        sample_in_memory : bool (default: True)
+            If true, store all permutations in memory when sampling value functions (with shap_sample_reps < 1). Otherwise, an on-demand strategy is used that works better for larger circuits.
         shap_sample_seed : int or None, optional (default: None)
             Random seed for numpy.random.RandomState, used for subsampling.
         shap_batch_size : int or None, optional (default: None)
@@ -64,6 +67,7 @@ class QuantumShapleyValues(ShapleyValues):
         # initialize
         super().__init__(unlocked_instructions, locked_instructions, value_fun, effective_value_kwargs_dict,
                          shap_sample_frac, shap_sample_reps, shap_batch_size, evaluate_value_only_once,
+                         sample_in_memory,
                          shap_sample_seed, memory, callback, delta_exponent, name, silent)
 
     def run(self):
