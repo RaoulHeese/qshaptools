@@ -20,38 +20,38 @@ Minimal working example:
 
 .. code-block:: python
 
-	from qiskit import Aer
-	from qiskit.utils import QuantumInstance
-	from qiskit.circuit.library import QAOAAnsatz
-	from qiskit.opflow import PauliSumOp
-	from qshap import QuantumShapleyValues
-	from qvalues import value_H
-	from tools import visualize_shapleys
+    from qiskit import Aer
+    from qiskit.utils import QuantumInstance
+    from qiskit.circuit.library import QAOAAnsatz
+    from qiskit.opflow import PauliSumOp
+    from qshap import QuantumShapleyValues
+    from qvalues import value_H
+    from tools import visualize_shapleys
 
-	# define circuit
-	H = PauliSumOp.from_list([('ZZI', 1), ('ZII', 2), ('ZIZ', -3)])
-	qc = QAOAAnsatz(cost_operator=H, reps=1)
-	qc = qc.decompose().decompose().decompose()
-	qc = qc.assign_parameters([0]*len(qc.parameters))
+    # define circuit
+    H = PauliSumOp.from_list([('ZZI', 1), ('ZII', 2), ('ZIZ', -3)])
+    qc = QAOAAnsatz(cost_operator=H, reps=1)
+    qc = qc.decompose().decompose().decompose()
+    qc = qc.assign_parameters([0]*len(qc.parameters))
 
-	# define quantum instance
-	quantum_instance = QuantumInstance(backend=Aer.get_backend('statevector_simulator'))
+    # define quantum instance
+    quantum_instance = QuantumInstance(backend=Aer.get_backend('statevector_simulator'))
 
-	# setup quantum Shapley values
-	qsv = QuantumShapleyValues(qc, value_fun=value_H, value_kwargs_dict=dict(H=H), quantum_instance=quantum_instance)
-	print(qsv)
+    # setup quantum Shapley values
+    qsv = QuantumShapleyValues(qc, value_fun=value_H, value_kwargs_dict=dict(H=H), quantum_instance=quantum_instance)
+    print(qsv)
 
-	# evaluate quantum Shapley values
-	qsv()
+    # evaluate quantum Shapley values
+    qsv()
 
-	# show results
-	print(qsv.phi_dict)
-	visualize_shapleys(qc, phi_dict=qsv.phi_dict).draw()
+    # show results
+    print(qsv.phi_dict)
+    visualize_shapleys(qc, phi_dict=qsv.phi_dict).draw()
 
 As a result, the quantum Shapley values assigned to each gate are plotted:
 
 .. image:: https://github.com/RaoulHeese/qshaptools/blob/master/_static/output.png?raw=true
-    :alt: Output
+	:alt: Output
 
 
 📖 **Citation**
@@ -60,7 +60,7 @@ If you find this code useful in your research, please consider citing:
 
 .. code-block:: tex
 
-	@misc{https://doi.org/10.48550/arxiv.2301.09138,
+    @misc{https://doi.org/10.48550/arxiv.2301.09138,
           doi = {10.48550/ARXIV.2301.09138}, 
           url = {https://arxiv.org/abs/2301.09138},
           author = {Heese, Raoul and Gerlach, Thore and Mücke, Sascha and Müller, Sabine and Jakobs, Matthias and Piatkowski, Nico},  
