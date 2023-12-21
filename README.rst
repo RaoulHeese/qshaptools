@@ -70,3 +70,5 @@ If you find this code useful in your research, please consider citing:
           year = {2023},
           copyright = {arXiv.org perpetual, non-exclusive license}
          }
+
+*This project is currently not under development and is not actively maintained.*
