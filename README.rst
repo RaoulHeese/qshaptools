@@ -9,7 +9,7 @@ Quantum Shapley Value Toolbox
 .. image:: https://github.com/RaoulHeese/qshaptools/blob/master/_static/qshap.png?raw=true
     :alt: Title
 
-Experimental Python toolbox for Shapley values with uncertain value functions in general (see `Shapley Values with Uncertain Value Functions: arxiv.2301.08086 <https://doi.org/10.48550/arxiv.2301.08086>`_) and quantum Shapley values in particular (see `Explainable Quantum Machine Learning: arxiv.2301.09138 <https://doi.org/10.48550/arxiv.2301.09138>`_). Quantum Shapley values provide a method to measure the influence of gates within quantum circuit with respect to a freely customizable value function, for example expressibility or entanglement capability.
+Experimental Python toolbox for Shapley values with uncertain value functions in general (see `Shapley Values with Uncertain Value Functions <https://doi.org/10.48550/arxiv.2301.08086>`_) and quantum Shapley values in particular (see `Explaining Quantum Circuits with Shapley Values: Towards Explainable Quantum Machine Learning <https://doi.org/10.48550/arxiv.2301.09138>`_). Quantum Shapley values provide a method to measure the influence of gates within quantum circuit with respect to a freely customizable value function, for example expressibility or entanglement capability.
 
 
 **Usage**
@@ -56,19 +56,17 @@ As a result, the quantum Shapley values assigned to each gate are plotted:
 
 📖 **Citation**
 
-If you find this code useful in your research, please consider citing:
+If you find this code useful in your research, please consider citing `Explaining Quantum Circuits with Shapley Values: Towards Explainable Quantum Machine Learning <https://doi.org/10.48550/arxiv.2301.09138>`_:
 
 .. code-block:: tex
 
-    @misc{https://doi.org/10.48550/arxiv.2301.09138,
-          doi = {10.48550/ARXIV.2301.09138}, 
-          url = {https://arxiv.org/abs/2301.09138},
-          author = {Heese, Raoul and Gerlach, Thore and Mücke, Sascha and Müller, Sabine and Jakobs, Matthias and Piatkowski, Nico},  
-          keywords = {Quantum Physics (quant-ph), Machine Learning (cs.LG), Machine Learning (stat.ML), FOS: Physical sciences, FOS: Physical sciences, FOS: Computer and information sciences, FOS: Computer and information sciences},
-          title = {Explainable Quantum Machine Learning},
-          publisher = {arXiv},
-          year = {2023},
-          copyright = {arXiv.org perpetual, non-exclusive license}
-         }
+    @misc{heese2023explaining,
+      title={Explaining Quantum Circuits with Shapley Values: Towards Explainable Quantum Machine Learning}, 
+      author={Raoul Heese and Thore Gerlach and Sascha Mücke and Sabine Müller and Matthias Jakobs and Nico Piatkowski},
+      year={2023},
+      eprint={2301.09138},
+      archivePrefix={arXiv},
+      primaryClass={quant-ph}
+      }
 
 *This project is currently not under development and is not actively maintained.*
